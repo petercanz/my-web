@@ -1,8 +1,8 @@
-
 // definitions...
 
 &           = metamark
 ()          = <span class='inset'>
+():         = metadata
 @include    = include
 @imbed      = imbedURL
 
@@ -94,6 +94,9 @@ _       = <sub>
 
 @       = linkURL
 !       = imgURL
+
+
+metadata :: () => '<div class=empty><br/></div>';
 
 linkURL :: (content) => {
     var url = markit('text', content);
