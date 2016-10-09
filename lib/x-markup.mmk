@@ -76,8 +76,7 @@
 ####    = <h4>
 #####   = <h5>
 ######  = <h6>
-*       = <em>
-**      = <strong>
+
 >       = <blockquote>
 ---     = <hr/>
 -       = list <ul>
@@ -95,6 +94,36 @@ _       = <sub>
 @       = linkURL
 !       = imgURL
 
+// special specifics ...
+
+*       = list <ul>
+*[]     = <em>
+*()     = <em>
+**      = <strong>
+
+#[]     = isID <b>
+
+// quotes ......
+
+"()"    = dquo
+""()""  = pdquo
+`()`    = text <code>
+``()``  = text <kbd>
+*()*    = <em>
+**()**  = <strong>
+_()_    = <em>
+__()__  = <strong>
+~()~    = <u>
+~~()~~  = <s>
+
+// symbols .....
+
+(->)    = &rarr;
+(---)   = <hr>
+
+// transforms......
+
+pdquo :: (content) => '"'+markit('myword',content)+'"'
 
 linkURL :: (content) => {
     var url = markit('text', content);
