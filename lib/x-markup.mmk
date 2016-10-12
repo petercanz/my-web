@@ -118,12 +118,14 @@ __()__  = <strong>
 
 // symbols .....
 
+(')     = &rsquo;
 (->)    = &rarr;
+(--)    = &mdash;
 (---)   = <hr>
 
 // transforms......
 
-pdquo :: (content) => '"'+markit('myword',content)+'"'
+quot :: (content) => '"'+markit('myword',content)+'"'
 
 linkURL :: (content) => {
     var url = markit('text', content);

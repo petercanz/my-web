@@ -1,3 +1,276 @@
-##  Hello World!
+##  Extra Notations
 
-An :cite[Alice In Wonderland] tale..
+The core Myword notation for inline elements is the label and bracket notation. This can be used to represent any HTML element, and the content of the brackets can use any other syntax that is defined in a lingo. The core notation is easy to read, and it is very flexible and extendable.  However, there are some other lightweight markup notations, such as the Markdown notations, that have become very popular, and they are even easier to read.
+
+For this reason Myword enables a variety of extra notations that can be defined in much the same way that labels are defined for the core notation. This allow most of the familiar Markdown notations to be emulated. The extra notations include symbols, quotes, metadata, and double bracket notations.
+
+
+##  Symbols
+
+HTML allows any Unicode symbol to be expressed as an entity. For example: `&`rarr; for a &rarr; symbol.
+
+Some symbols can be directly represented with common characters, for example `[->] to represent the &rarr; arrow.
+
+To enable symbol notations Myword allows a definition pattern inside brackets to be used to represent a symbol:
+
+.demo
+    x -> y (--)-> z
+    ---
+
+    &
+        (->) = &rarr;
+        (--) = &mdash;
+        (---) = <hr>
+
+The symbol notations are simply nicer to read than the standard HTML entity notation.
+
+As another example, the typewriter apostrophe may be used to directly represent a typographical apostrophe. The same character is used for single quote marks, but single quotes can be defined with a bracket label, which allows apostrophe characters to be used inside single quotes:
+
+.demo
+    That's '[Joes's thing].
+
+    &
+        (')  = &rsquo;
+        '    = squo
+        squo :: (content) => '&lsquo;'+markit('myword',content)+'&rsquo;'
+
+It is quite rare to need a plain typewriter apostrophe, except in code or keyboard text, which is no problem:
+
+.demo
+    It's `[p's and q's]
+
+    &  ` = text <code>
+
+But if required you can always redefine the apostrophe symbol definition:
+
+.demo
+    It's p's and q's
+
+    &  (') = &apos;
+
+Or you may choose to define an escape symbol:
+
+.demo
+    It's p\'s and q(\')s
+
+    &
+        (')  = &rsquo;
+        (\') = &apos;
+
+Notice that symbol notations may be written inside brackets, just as they are defined. This allows symbols to be named with any text inside brackets:
+
+.demo
+    (c) (tm) [+1] [smiley]
+
+    &
+        (c) = &copy;
+        (tm) = &trade;
+        [+1] = &#x1F44D;
+        [smiley] = &#x263A;
+
+Bracket definitions are not restricted to a symbol. They can be defined in the same way as any other label, with a transform and a HTML wrapper:
+
+.demo
+    All heart [heart], all done [x]
+
+    The date is: [date].
+
+    &
+        [heart] = &hearts; <span style='color:red'>
+
+        [x] = <input type=checkbox checked>
+
+        [date] = dateNow <b>
+        dateNow :: () => new Date().toDateString()
+
+##  Quotes
+
+HTML provides a <q> tag that can be used for typographical quotation marks:
+
+.demo
+    Nice :q[typographical] quote marks.
+
+    &  :q = <q>
+
+Even better, quotes can be defined directly as a notation. They are defined as a pattern using quote marks around empty brackets:
+
+.demo
+    Nice "typographical" quote marks.
+
+    &  "()" = <q>
+
+The characters `[` " * _ ~]  may be used to define quote notations. This allows the familiar Markdown notations to be defined:
+
+.demo
+    `if (a>b) {...}`
+
+    *for emphasis*
+
+    __for strong emphasis__
+
+    ~~strike this out~~
+
+    &
+        `()` = text <code>
+        *()* = <em>
+        __()__ = <strong>
+        ~~()~~ = <s>
+
+Different quotes can be nested:
+
+.demo
+    *some **other** thing*
+
+    *emphasis and **strong emphasis***
+
+    ``double `code quotes` can contain single quotes``
+
+Quotes can not contain their own quote mark, but myword bracket labels can be used to do that:
+
+.demo
+    *[including a `*` character]
+
+Brackets are protected inside quotes, so it is also possible to write:
+
+.demo
+    *including a `[*] character*
+
+    *or even (*) as a symbol*
+
+    &  (*) = &#x2A;
+
+Quotes provide a neat and simple notation, but they are quite restricted. Not only can quotes not contain the same quote mark, they must start at the beginning of a word, and nested quotes can become confusing. It is better to use bracket notation for any difficult markup:
+
+.demo
+    One_two__three___.
+
+    One_[two__[three]].
+
+    &
+        _  = <i>
+        __ = <b>
+
+##  Metadata
+
+Documents may contain metadata, this is data that is associated with the document but distinct from the normal content. For example, a document may use *front matter* to record some data about the document, such as the author and publication date.
+
+Any Myword block label that has a colon suffix may be used to define metadata:
+
+.demo
+    title:  The Title
+
+    author:  A. Writer
+    date:  10 Oct 2016
+
+    The author %[author:] wrote %[title:] on %[date:].
+
+    &
+        ():  = <div class='meta' hidden>
+        %    = data <b>
+        data :: (name) => markit.metadata(name)
+
+The `[():] pattern is used to define the default translation for any label with a colon suffix.
+
+By default the definitions of the metadata are usually hidden so that they do not appear as part of the document content. The metadata values can be used in the content, as shown in the previous example. Notice that the name of the metadata element is the full label including the colon suffix.
+
+Individual metadata labels may also be given their own definitions:
+
+.demo
+    title:  The Title
+
+    author:  A. Writer
+    date:  10 Oct 2016
+
+    &
+        title: = <h2>
+        author: = <h3>
+        date: = <h4>
+
+##  Double Bracket Notations
+
+Double bracket patterns may also be defined:
+
+.demo
+    For example, a [link to something](http://example.com)
+
+    &
+        []() = linkURL
+        linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
+
+The content text inside the two brackets are concatenated with a tab separator, and passed to the transform as a single argument string.
+
+A double bracket pattern may also have a prefix label, the same as a normal single bracket label:
+
+.demo
+    This image: ![a gopher](images/gopher.png)
+
+    &
+        ![]() = imageURL
+
+        imageURL :: (x) => "<img src='"+x.split('\t')[1]+"' />"
+
+A label defined for a double bracket notation may be different from the same label defined as a normal single bracket notation.
+
+A metadata definition can be used to define a reference key word that can be used in a double bracket link notation:
+
+.demo
+    For example, a [link to something][eg]
+
+    [eg]:  http://example.com
+
+    &
+        [][] = linkRef
+        linkRef :: (x) => {
+          var ref = x.split('\t')[1];
+          var url = markit.metadata('['+ref+']:');
+          if (url) return "<a href='"+url+"'>"+x.split('\t')[0]+"</a>"
+          return "["+x.split('\t')[0]+"][<mark>"+ref+"</mark>]"; }
+
+
+
+
+##  Markdown Compatibility
+
+Markdown comes in many different flavours, but the majority of common Markdown notations can be used in a Myword document. The difference is that in Myword a block label, such as a `[##] header label, or a `[>] blockquote label, must be offset with a tab or two or more spaces (Markdown allows a single space). This simple offset format ensures that a label can always be distinguished from the same text being used as the first word in a line of normal prose. Also, if the content of a block label extends over multiple lines then in Myword these lines must be indented under the label to show that structure.
+
+In Myword there are no predefined built-in definitions, so to use Markdown notations they must be defined in a Myword lingo. Any Markdown notation may also be re-defined to serve a different purpose, or the author may prefer to treat some notations as literal text. In Markdown the same label may have a different meaning, depending on how the label is used. For example, the * is used to label a list element bullet point, but it is also used as a quote mark for `[*emphasis*].
+
+It is usually best for a label to have a single meaning. Thus the standard Myword label definition is generic. It allows the label to be used as a block label, or as an inline label with either square brackets or parentheses. But more specific definition patterns can be defined if required:
+
+.demo
+    *  A bullet point and *emphasis*.
+
+    &
+        *    = list <ul>
+        *[]  = <em>
+        *()  = <i>
+        *()* = <em>
+
+
+
+
+
+
+
+
+
+
+
+
+
+&  " = dquo
+   dquo :: (c) => '&ldquo;'+markit('myword',c)+'&rdquo;';
+
+&  ' = squo
+   squo :: (c) => '&lsquo;'+markit('myword',c)+'&rsquo;';
+
+&  []() = link2url
+    link2url :: (args) => {
+        return "<a href='"+args.split('\t')[1]+"'>"+args.split('\t')[0]+"</a>"; };
+
+&  [][] = link2ref
+    link2ref :: (args) => {
+        var ref = args.split('\t')[1]
+        var url = markit.metadata('['+ref+']:');
+        if (!url) return "["+args.split('\t')[0]+"][<mark>"+ref+"</mark>]";
+        return "<a href='"+url+"'>"+args.split('\t')[0]+"</a>"; };
