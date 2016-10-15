@@ -2,7 +2,7 @@
 
 The core Myword notation for inline elements is the label and bracket notation. This can be used to represent any HTML element, and the content of the brackets can use any other syntax that is defined in a lingo. The core notation is easy to read, and it is very flexible and extendable.  However, there are some other lightweight markup notations, such as the Markdown notations, that have become very popular, and they are even easier to read.
 
-For this reason Myword enables a variety of extra notations that can be defined in much the same way that labels are defined for the core notation. This allow most of the familiar Markdown notations to be emulated. The extra notations include symbols, quotes, metadata, and double bracket notations.
+For this reason Myword enables a variety of extra notations that can be defined in much the same way that labels are defined for the core notation. This allow most of the familiar Markdown notations to be emulated. The extra notations include symbols, quotes, and double bracket notations.
 
 
 ##  Symbols
@@ -119,82 +119,63 @@ The characters `[` " * _ ~]  may be used to define quote notations. This allows 
 Different quotes can be nested:
 
 .demo
-    *some **other** thing*
+    *some **bold** in italics*
 
-    *emphasis and **strong emphasis***
-
-    ``double `code quotes` can contain single quotes``
-
-Quotes can not contain their own quote mark, but myword bracket labels can be used to do that:
-
-.demo
-    *[including a `*` character]
-
-Brackets are protected inside quotes, so it is also possible to write:
-
-.demo
-    *including a `[*] character*
-
-    *or even (*) as a symbol*
-
-    &  (*) = &#x2A;
-
-Quotes provide a neat and simple notation, but they are quite restricted. Not only can quotes not contain the same quote mark, they must start at the beginning of a word, and nested quotes can become confusing. It is better to use bracket notation for any difficult markup:
-
-.demo
-    One_two__three___.
-
-    One_[two__[three]].
+    **bold with some *italics* inside**
 
     &
-        _  = <i>
-        __ = <b>
+        *()*   = <i>
+        **()** = <b>
 
-##  Metadata
-
-Documents may contain metadata, this is data that is associated with the document but distinct from the normal content. For example, a document may use *front matter* to record some data about the document, such as the author and publication date.
-
-Any Myword block label that has a colon suffix may be used to define metadata:
+The content inside quotes can also be treated as literal text:
 
 .demo
-    title:  The Title
+    `double quoted ``literal text`` inside code quotes`
 
-    author:  A. Writer
-    date:  10 Oct 2016
-
-    The author %[author:] wrote %[title:] on %[date:].
+    ``single `code quotes` inside double text quotes``
 
     &
-        ():  = <div class='meta' hidden>
-        %    = data <b>
-        data :: (name) => markit.metadata(name)
+        `()`   = code <code>
+        ``()`` = text <kbd>
 
-The `[():] pattern is used to define the default translation for any label with a colon suffix.
-
-By default the definitions of the metadata are usually hidden so that they do not appear as part of the document content. The metadata values can be used in the content, as shown in the previous example. Notice that the name of the metadata element is the full label including the colon suffix.
-
-Individual metadata labels may also be given their own definitions:
+Quotes can only contain an end quote if it is protected inside brackets or a literal text quote:
 
 .demo
-    title:  The Title
+    *an inline element `[*] inside quotes*
 
-    author:  A. Writer
-    date:  10 Oct 2016
+    *a (*) symbol inside quotes*
+
+    *a code quote `*` inside quotes*
 
     &
-        title: = <h2>
-        author: = <h3>
-        date: = <h4>
+        `     = code <kbd>
+        *()*  = <i>
+        (*)   = &#x2A;
+        `()`  = code <code>
+
+Also, quotes can not be started inside a word, and overlapping quote marks are confusing and best avoided.
+
+The Myword inline markup has none of these restrictions:
+
+.demo
+    *[including a * character]
+
+    A long*[and**[bold]] word.
+
+    &
+        *  = <i>
+        ** = <b>
+
 
 ##  Double Bracket Notations
 
-Double bracket patterns may also be defined:
+Double bracket patterns are used to emulate Markdown link notations. A bracket patttern can be defined like this:
 
 .demo
     For example, a [link to something](http://example.com)
 
     &
-        []() = linkURL
+        []()    = linkURL
         linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
 
 The content text inside the two brackets are concatenated with a tab separator, and passed to the transform as a single argument string.
@@ -211,7 +192,7 @@ A double bracket pattern may also have a prefix label, the same as a normal sing
 
 A label defined for a double bracket notation may be different from the same label defined as a normal single bracket notation.
 
-A metadata definition can be used to define a reference key word that can be used in a double bracket link notation:
+A Markdown link notation with a reference can also be used:
 
 .demo
     For example, a [link to something][eg]
@@ -219,13 +200,19 @@ A metadata definition can be used to define a reference key word that can be use
     [eg]:  http://example.com
 
     &
-        [][] = linkRef
-        linkRef :: (x) => {
-          var ref = x.split('\t')[1];
-          var url = markit.metadata('['+ref+']:');
-          if (url) return "<a href='"+url+"'>"+x.split('\t')[0]+"</a>"
-          return "["+x.split('\t')[0]+"][<mark>"+ref+"</mark>]"; }
+        [][] = linkURL
+        linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
 
+The reference definition `[[eg]:] is a special block label pattern that is automatically translated into a label definition like this:
+
+.demo
+    For example, a [link to something][eg]
+
+    &
+        [eg] = http://example.com
+
+        [][] = linkURL
+        linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
 
 
 
@@ -233,16 +220,17 @@ A metadata definition can be used to define a reference key word that can be use
 
 Markdown comes in many different flavours, but the majority of common Markdown notations can be used in a Myword document. The difference is that in Myword a block label, such as a `[##] header label, or a `[>] blockquote label, must be offset with a tab or two or more spaces (Markdown allows a single space). This simple offset format ensures that a label can always be distinguished from the same text being used as the first word in a line of normal prose. Also, if the content of a block label extends over multiple lines then in Myword these lines must be indented under the label to show that structure.
 
-In Myword there are no predefined built-in definitions, so to use Markdown notations they must be defined in a Myword lingo. Any Markdown notation may also be re-defined to serve a different purpose, or the author may prefer to treat some notations as literal text. In Markdown the same label may have a different meaning, depending on how the label is used. For example, the * is used to label a list element bullet point, but it is also used as a quote mark for `[*emphasis*].
+In Myword there are no predefined built-in definitions, so to use Markdown notations they must be defined in a Myword lingo. In Markdown the same label may have a different meaning, depending on how the label is used. For example, the * is used to label a list element bullet point, but it is also used as a quote mark for `[*emphasis*].
 
 It is usually best for a label to have a single meaning. Thus the standard Myword label definition is generic. It allows the label to be used as a block label, or as an inline label with either square brackets or parentheses. But more specific definition patterns can be defined if required:
 
 .demo
-    *  A bullet point and *emphasis*.
+    *  A bullet point with some *emphasis*.
+    *  Another point with *[italic text].
 
     &
         *    = list <ul>
-        *[]  = <em>
+        *[]  = <i>
         *()  = <i>
         *()* = <em>
 

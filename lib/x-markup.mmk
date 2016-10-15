@@ -107,8 +107,8 @@ _       = <sub>
 
 "()"    = dquo
 ""()""  = pdquo
-`()`    = text <code>
-``()``  = text <kbd>
+`()`    = code <code>
+``()``  = code <kbd>
 *()*    = <em>
 **()**  = <strong>
 _()_    = <em>
@@ -194,12 +194,12 @@ imbedURL :: (content) => {
 
 // useful document elements ......
 
-.eg     = text <div class='eg'>
+.eg     = code <div class='eg'>
 
 .demo   = demo <table class='demo'>
 
 demo    :: (content) => "<tr><td class='A1'>" +
-                markit('text',content) +
+                markit('code',content) +
                 "</td><td class='B1'>" +
                 markit('myword',content) +
                 "</td></tr>"
