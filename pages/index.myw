@@ -169,30 +169,59 @@ The Myword inline markup has none of these restrictions:
 
 ##  Double Bracket Notations
 
-Double bracket patterns are used to emulate Markdown link notations. A bracket patttern can be defined like this:
+A Myword inline label may be defined with a second set of brackets like this:
 
 .demo
-    For example, a [link to something](http://example.com)
+    For example, @[link to something](http://example.com)
 
     &
-        []()    = linkURL
+        @[]()   = linkURL
+        linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
+
         linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
 
-The content text inside the two brackets are concatenated with a tab separator, and passed to the transform as a single argument string.
+The second set of brackets can may be defined as a symbol with replacement definition:
 
-A double bracket pattern may also have a prefix label, the same as a normal single bracket label:
+.demo
+    For example, @[link to something][eg]
+
+    &
+        [eg]    = http://example.com
+
+        @[][]  = linkURL
+        linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
+
+        linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
+
+An image can be defined in much the same way:
 
 .demo
     This image: ![a gopher](images/gopher.png)
 
     &
-        ![]() = imageURL
+        ![]()    = imageURL
+        imageURL :: (txt,url) => "<img src='"+url+"' title='"+txt+"' />"
 
-        imageURL :: (x) => "<img src='"+x.split('\t')[1]+"' />"
+        imageURL :: (x) => "<img src='"+x.split('\t')[1]+"' title='"+x.split('\t')[0]+"' />"
 
-A label defined for a double bracket notation may be different from the same label defined as a normal single bracket notation.
+This emulates the Markdown image notation.
 
-A Markdown link notation with a reference can also be used:
+To emulate the Markdown link notations a bracket pattern can be used without any explicit label, like this:
+
+.demo
+    For example, a [link to something][eg]
+
+    &
+        [eg]    = http://example.com
+
+        [][]    = linkURL
+        linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
+
+        linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
+
+The `[[]()] pattern matches the double brackets, and the same linkURL transform can be used as before. It is as if it has an implicit @ label.
+
+The Markdown link reference definitions can also be emulated by using a label that matches the Markdown `[[]:] format:
 
 .demo
     For example, a [link to something][eg]
@@ -200,20 +229,24 @@ A Markdown link notation with a reference can also be used:
     [eg]:  http://example.com
 
     &
-        [][] = linkURL
+        [][]    = linkURL
+        linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
+
         linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
 
 The reference definition `[[eg]:] is a special block label pattern that is automatically translated into a label definition like this:
 
+.eg
+    [eg]:  http://example.com      =>       &  [eg] = http://example.com
+
+This is another way to define symbols:
+
 .demo
-    For example, a [link to something][eg]
+    From [alpha] -> [omega].
 
-    &
-        [eg] = http://example.com
-
-        [][] = linkURL
-        linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
-
+    [alpha]:  &alpha;
+    [omega]:  &omega;
+    [->]:     &rarr;
 
 
 ##  Markdown Compatibility
