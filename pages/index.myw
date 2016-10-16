@@ -180,7 +180,7 @@ A Myword inline label may be defined with a second set of brackets like this:
 
         linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
 
-The second set of brackets can may be defined as a symbol with replacement definition:
+The second set of brackets can be defined as a symbol with replacement definition:
 
 .demo
     For example, @[link to something][eg]
@@ -206,7 +206,7 @@ An image can be defined in much the same way:
 
 This emulates the Markdown image notation.
 
-To emulate the Markdown link notations a bracket pattern can be used without any explicit label, like this:
+To emulate the Markdown link notations a bracket pattern can be defined without any explicit label, like this:
 
 .demo
     For example, a [link to something][eg]
@@ -259,6 +259,7 @@ It is usually best for a label to have a single meaning. Thus the standard Mywor
 
 .demo
     *  A bullet point with some *emphasis*.
+    
     *  Another point with *[italic text].
 
     &
