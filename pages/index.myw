@@ -116,7 +116,7 @@ The characters `[` " * _ ~]  may be used to define quote notations. This allows 
         __()__ = <strong>
         ~~()~~ = <s>
 
-Different quotes can be nested:
+A different quote can be defined for any of the five quote mark characters, with any number of the characters. Different quotes can be nested:
 
 .demo
     *some **bold** in italics*
@@ -132,13 +132,16 @@ The content inside quotes can also be treated as literal text:
 .demo
     `double quoted ``literal text`` inside code quotes`
 
-    ``single `code quotes` inside double text quotes``
+    ``single `code quotes` *inside* double text quotes``
 
     &
         `()`   = code <code>
         ``()`` = text <kbd>
 
-Quotes can only contain an end quote if it is protected inside brackets or a literal text quote:
+---
+This section to be deleted...
+
+Quotes can never contain their own end quote mark. so these example probably don't work the way you might expect:
 
 .demo
     *an inline element `[*] inside quotes*
@@ -153,18 +156,23 @@ Quotes can only contain an end quote if it is protected inside brackets or a lit
         (*)   = &#x2A;
         `()`  = code <code>
 
-Also, quotes can not be started inside a word, and overlapping quote marks are confusing and best avoided.
+---
 
-The Myword inline markup has none of these restrictions:
+
+Quote notations are nice and easy to read, but in Myword they are quite restricted. Quotes can never contain their own end quote mark. The first quote mark that matches the start quote mark will immediately end the quotes. This is not always what you want. Also, quotes can only start at a word boundary (not inside a word), and quote marks can not be merged together. Markdown covers lots of these special cases, but it is quite hard to understand. The Myword quotes are restrictive, but they are simple and easy to understand.
+
+The Myword bracket notations have none of these restrictions:
 
 .demo
-    *[including a * character]
+    *[including a `*` character]
 
     A long*[and**[bold]] word.
 
     &
         *  = <i>
         ** = <b>
+
+Quote notations are very nice and easy to read, but they can not handle complicated expressions. Just as in arithmetic, when things get more complicated then you need to use brackets.
 
 
 ##  Double Bracket Notations
@@ -180,7 +188,7 @@ A Myword inline label may be defined with a second set of brackets like this:
 
         linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
 
-The second set of brackets can be defined as a symbol with replacement definition:
+The second set of brackets can be defined as a symbol with a replacement value:
 
 .demo
     For example, @[link to something][eg]
@@ -206,7 +214,7 @@ An image can be defined in much the same way:
 
 This emulates the Markdown image notation.
 
-To emulate the Markdown link notations a bracket pattern can be defined without any explicit label, like this:
+To emulate the Markdown link notations a bracket pattern can be defined like this:
 
 .demo
     For example, a [link to something][eg]
@@ -239,7 +247,7 @@ The reference definition `[[eg]:] is a special block label pattern that is autom
 .eg
     [eg]:  http://example.com      =>       &  [eg] = http://example.com
 
-This is another way to define symbols:
+This provides a shorthand that may be used for any symbol definitions:
 
 .demo
     From [alpha] -> [omega].
@@ -251,15 +259,17 @@ This is another way to define symbols:
 
 ##  Markdown Compatibility
 
-Markdown comes in many different flavours, but the majority of common Markdown notations can be used in a Myword document. The difference is that in Myword a block label, such as a `[##] header label, or a `[>] blockquote label, must be offset with a tab or two or more spaces (Markdown allows a single space). This simple offset format ensures that a label can always be distinguished from the same text being used as the first word in a line of normal prose. Also, if the content of a block label extends over multiple lines then in Myword these lines must be indented under the label to show that structure.
+The Myword extra notations go beyond Markdown in some areas (such as symbols), but they fall short of Markdown in other areas (such as the special case rules for different quote marks). For 100% Markdown compatibility a fully compliant Markdown parser can used as a Myword plug-in. But Markdown is not extensible, whereas the Myword extra notations are fully user definable and extendable, and they can emulate all the common Markdown notations.
 
-In Myword there are no predefined built-in definitions, so to use Markdown notations they must be defined in a Myword lingo. In Markdown the same label may have a different meaning, depending on how the label is used. For example, the * is used to label a list element bullet point, but it is also used as a quote mark for `[*emphasis*].
+Markdown documents using most of the common expressions may be used in Myword without any changes. But the full Common Mark specification for Markdown contains a lot of special cases that Myword notations can not replicate. In Markdown each notation has a fixed semantic meaning, so that different quote marks can have very different rules. In Myword all the quote marks work in exactly the same way. In Markdown the back-tick quotes can only represent code quotes, and code quotes are given priority over other quotes, and the different quotes all follow slightly different rules. In Myword the quote notations are very simple, and they all work exactly the same way, but the bracket notations are needed for more complex expressions. The Myword bracket notations can be used in much the same way that brackets are used in arithmetic. Markdown has no equivalent to the Myword bracket notation.
 
-It is usually best for a label to have a single meaning. Thus the standard Myword label definition is generic. It allows the label to be used as a block label, or as an inline label with either square brackets or parentheses. But more specific definition patterns can be defined if required:
+In Myword all the block labels, such as a `[##] header label, or a `[>] blockquote label, must be offset with a tab or two or more spaces (Markdown allows a single space). This offset format ensures that a label can always be distinguished from the same text being used as the first word in a line of normal prose. In Myword the user can choose to define any word as a block label. Also, if the content of a block label extends over multiple lines then in Myword these lines must be indented under the label to show that structure.
+
+In Myword any number of labels can be defined, so it is usually best for each label to have a single meaning. In Markdown the notations are restricted to a small set of symbols, and the same symbol can have more than one meaning. For example, the * is used as a bullet point to label a list element, but it is also used as a quote mark for `[*emphasis*]. These notations may be defined in Myword like this:
 
 .demo
     *  A bullet point with some *emphasis*.
-    
+
     *  Another point with *[italic text].
 
     &
@@ -267,6 +277,8 @@ It is usually best for a label to have a single meaning. Thus the standard Mywor
         *[]  = <i>
         *()  = <i>
         *()* = <em>
+
+In Myword there are no predefined built-in definitions, so to use Markdown notations requires a Myword lingo to define the Markdown notations.
 
 
 
@@ -281,18 +293,18 @@ It is usually best for a label to have a single meaning. Thus the standard Mywor
 
 
 &  " = dquo
-   dquo :: (c) => '&ldquo;'+markit('myword',c)+'&rdquo;';
+   dquo :: (c) => '&ldquo;'+markit('myword',c)+'&rdquo;'
 
 &  ' = squo
-   squo :: (c) => '&lsquo;'+markit('myword',c)+'&rsquo;';
+   squo :: (c) => '&lsquo;'+markit('myword',c)+'&rsquo;'
 
 &  []() = link2url
     link2url :: (args) => {
-        return "<a href='"+args.split('\t')[1]+"'>"+args.split('\t')[0]+"</a>"; };
+        return "<a href='"+args.split('\t')[1]+"'>"+args.split('\t')[0]+"</a>"; }
 
 &  [][] = link2ref
     link2ref :: (args) => {
         var ref = args.split('\t')[1]
         var url = markit.metadata('['+ref+']:');
         if (!url) return "["+args.split('\t')[0]+"][<mark>"+ref+"</mark>]";
-        return "<a href='"+url+"'>"+args.split('\t')[0]+"</a>"; };
+        return "<a href='"+url+"'>"+args.split('\t')[0]+"</a>"; }
