@@ -116,7 +116,7 @@ The characters `[` " * _ ~]  may be used to define quote notations. This allows 
         __()__ = <strong>
         ~~()~~ = <s>
 
-A different quote can be defined for any of the five quote mark characters, with any number of the characters. Different quotes can be nested:
+Different quotes can be defined using any of the five quote mark characters, and with any number of the same quote mark. Different quotes can be nested:
 
 .demo
     *some **bold** in italics*
@@ -186,8 +186,6 @@ A Myword inline label may be defined with a second set of brackets like this:
         @[]()   = linkURL
         linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
 
-        linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
-
 The second set of brackets can be defined as a symbol with a replacement value:
 
 .demo
@@ -199,8 +197,6 @@ The second set of brackets can be defined as a symbol with a replacement value:
         @[][]  = linkURL
         linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
 
-        linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
-
 An image can be defined in much the same way:
 
 .demo
@@ -209,8 +205,6 @@ An image can be defined in much the same way:
     &
         ![]()    = imageURL
         imageURL :: (txt,url) => "<img src='"+url+"' title='"+txt+"' />"
-
-        imageURL :: (x) => "<img src='"+x.split('\t')[1]+"' title='"+x.split('\t')[0]+"' />"
 
 This emulates the Markdown image notation.
 
@@ -225,8 +219,6 @@ To emulate the Markdown link notations a bracket pattern can be defined like thi
         [][]    = linkURL
         linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
 
-        linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
-
 The `[[]()] pattern matches the double brackets, and the same linkURL transform can be used as before. It is as if it has an implicit @ label.
 
 The Markdown link reference definitions can also be emulated by using a label that matches the Markdown `[[]:] format:
@@ -239,8 +231,6 @@ The Markdown link reference definitions can also be emulated by using a label th
     &
         [][]    = linkURL
         linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
-
-        linkURL :: (x) => "<a href='"+x.split('\t')[1]+"'>"+x.split('\t')[0]+"</a>"
 
 The reference definition `[[eg]:] is a special block label pattern that is automatically translated into a label definition like this:
 
