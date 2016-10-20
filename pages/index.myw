@@ -154,6 +154,27 @@ The Myword bracket notations have none of these restrictions:
 Quote notations are very nice and easy to read, but they can not handle complicated expressions. Just as in arithmetic, when things get more complicated then you need to use brackets.
 
 
+##  Nested Brackets
+
+In Myword the brackets `[(...)] or `[[...]] can be nested inside each other. This enables brackets to contain an odd unmatched bracket character provided that it is nested inside the other kind of brackets. For example:
+
+.demo
+    *[italics with an odd (]) closing square bracket]
+
+    &
+        *[] = <i>
+        (]) = &#x5D;
+
+.demo
+    #(bold with an odd [)] closing parenthesis)
+
+    &
+        #() = <b>
+        [)] = &#x29;
+
+By convention square brackets are preferred for the content of an inline label, while parenthesis are preferred for symbols.
+
+
 ##  Double Bracket Notations
 
 A Myword inline label may be defined with a second set of brackets like this:
