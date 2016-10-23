@@ -67,6 +67,8 @@ Symbols can be defined in the same way as any other label, with a transform and 
         (date) = dateNow <b>
         dateNow :: () => new Date().toDateString()
 
+Symbols written inside brackets can be thought of as a special case of bracket elements with an empty label.
+
 
 ##  Quotes
 
@@ -192,7 +194,7 @@ A comma should only be needed in rare situations, so the examples are rather con
         **[]   = <b>
         ***[]  = <mark>
 
-A comma immediately before an opening bracket acts as an empty label which does nothing. This can be used to separate an expression into two parts:
+A comma immediately before an opening bracket becomes an empty label. This allows a symbol in brackets to be used without the need for white-space:
 
 .demo
     --,(->)
