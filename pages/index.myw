@@ -1,28 +1,8 @@
 ##  Extra Notations
 
-The core Myword notation for inline elements is the label and bracket notation. This can be used to represent any HTML element, and the content of the brackets can use any other syntax that is defined in a lingo. The core notation is easy to read, and it is very flexible and extendable.  However, there are some other lightweight markup notations, such as the Markdown notations, that have become very popular, and they are even easier to read.
+The core MyWord notation for inline elements is the label and bracket notation. This can be used to represent any HTML element, and the content of the brackets can use any other syntax that is defined in a lingo. The core notation is easy to read, and it is very flexible and extendable.  However, there are some other lightweight markup notations, such as the Markdown notations, that have become very popular, and they are even easier to read.
 
-For this reason Myword enables a variety of extra notations that can be defined in much the same way that labels are defined for the core notation. This allow most of the familiar Markdown notations to be emulated. The extra notations include symbols, quotes, and double bracket notations.
-
-##  Code Quotes
-
-A *[code quote] is a basic notation for quoting literal text. Literal text is often some kind of program code, hence the name "code quote". A code quote uses back-tick quote marks, and this notation has top priority, which means that it can be used inside any content:
-
-.demo
-    *[a code quoted `]` inside square brackets]
-
-    &
-        *[]  = <i>
-
-Code quotes are pre-defined to represent literal quoted text.
-
-Code quotes can have any number of back-ticks in the quote marks. This allow a back-tick to be quoted:
-
-.demo
-    ``a back-tick ` inside code quotes``
-
-Later we will see some other quote notations, but they do not have the priority that the pre-defined code quotes have.
-
+For this reason MyWord enables a variety of extra notations that can be defined in much the same way that labels are defined for the core notation. This allow most of the familiar Markdown notations to be emulated. The extra notations include symbols, quotes, and double bracket notations.
 
 ##  Symbols
 
@@ -30,10 +10,10 @@ HTML allows any Unicode symbol to be expressed as an entity. For example: `&`rar
 
 Some symbols can be directly represented with common characters, for example `[->] to represent the &rarr; arrow.
 
-To enable symbol notations Myword allows a definition pattern inside parentheses to be used to represent a symbol:
+To enable symbol notations MyWord allows a definition pattern inside parentheses to be used to represent a symbol:
 
 .demo
-    x -> y (--)-> z
+    x -> y -- -> z
     ---
 
     &
@@ -65,7 +45,7 @@ But if required you can always redefine the apostrophe symbol to be a plain type
 
     &  (') = &apos;
 
-Notice that symbol notations may be written inside parentheses, just as they are defined. This allows symbols to be named with any text:
+A symbol may be written inside parentheses, just as they are defined. This allows symbols to be named with any text:
 
 .demo
     (c) (tm) (+1) (smiley)
@@ -104,7 +84,7 @@ Even better, quotes can be defined directly as a notation. They are defined as a
 
     &  "()" = <q>
 
-The are four general purpose quote mark characters `[" * _ ~]  that may be used to define quote notations. These quote marks, together with the special code quotes, allow the familiar Markdown notations to be emulated:
+The are five quote mark characters `[` " * _ ~]  that may be used to define quote notations. These quote marks allow the familiar Markdown notations to be emulated:
 
 .demo
     `if (a>b) {...}`
@@ -132,9 +112,9 @@ Different quotes can be defined using any of the quote mark characters, and with
         *()*   = <i>
         **()** = <b>
 
-Quote notations are nice and easy to read, but in Myword they are quite restricted. Quotes can never contain their own end quote mark. The first quote mark that matches the start quote mark will immediately end the quotes. This is not always what you want. Also, quotes (other than code quotes) can only start at a word boundary, that is, they can not start inside a word. Nested quotes with multiple quote marks can not be merged together. Markdown covers lots of these special cases, but it is quite hard to understand. The Myword quotes are restrictive, but they are simple and easy to understand.
+Quote notations are nice and easy to read, but in MyWord they are quite restricted. Quotes can never contain their own end quote mark. The first quote mark that matches the start quote mark will immediately end the quotes. This is not always what you want. Also, quotes (other than code quotes) can only start at a word boundary, that is, they can not start inside a word. Nested quotes with multiple quote marks can not be merged together. Markdown covers lots of these special cases, but it is quite hard to understand. The MyWord quotes are restrictive, but they are simple and easy to understand.
 
-The Myword bracket notations have no such restrictions:
+The MyWord bracket notations have no such restrictions:
 
 .demo
     *[including * characters], but *not without * brackets*.
@@ -153,7 +133,7 @@ Quote notations are simple and easy to read, but they can not handle complicated
 
 ##  Double Bracket Notations
 
-A Myword inline label may be defined with a second set of brackets like this:
+A MyWord inline label may be defined with a second set of brackets like this:
 
 .demo
     For example, @[link to something](http://example.com)
@@ -198,17 +178,42 @@ The Markdown link reference definitions can also be emulated by using a block la
 The reference definition `[[eg]:] is a special block label that is used to define the contents of the second brackets.
 
 
+##  Comma Labels
+
+A block label may contain any characters except for white-space. An inline label has a few more restrictions, it may not contain bracket characters, and a comma has a special meaning. A comma can be used to split a label into two parts. The text before the comma is simply part of the preceding text, the text after the comma becomes the label.
+
+A comma should only be needed in rare situations, so the examples are rather contrived, but they illustrates what happens:
+
+.demo
+    **,*[this thing]
+
+    &
+        *[]    = <i>
+        **[]   = <b>
+        ***[]  = <mark>
+
+A comma immediately before an opening bracket acts as an empty label which does nothing. This can be used to separate an expression into two parts:
+
+.demo
+    --,(->)
+
+    &
+        --()   = <mark>
+        (--)   = &mdash;
+        (->)   = &rarr;
+
+
 ##  Markdown Compatibility
 
-Myword is designed to allow any markup parser to translate the content text of a block label. This includes blocks of prose, which means that a standard Markdown parser can be used. The problem is that there is no way to extend the Markdown language. There are no custom notations, the only way to extend inside Markdown is to use standard HTML.
+MyWord is designed to allow any markup parser to translate the content text of a block label. This includes blocks of prose, which means that a standard Markdown parser can be used. The problem is that there is no way to extend the Markdown language. There are no custom notations, the only way to extend inside Markdown is to use standard HTML.
 
-Many users only need a simple basic version of Markdown, something which is very easy to read and understand, which was the intent for Markdown in the first place. Beyond the basics Markdown gets very complicated, see the [Common Mark Specification](http://commonmark.org/).  Since many authors only need a simple form of Markdown an alternative is to use Myword with a lingo that emulates all the common Markdown notations. For anything more complicated the Myword notations can be used in combination with the basic Markdown notations. Many simple Markdown documents may be used in Myword without any changes.
+Many users only need a simple basic version of Markdown, something which is very easy to read and understand, which was the intent for Markdown in the first place. Beyond the basics Markdown gets very complicated, see the [Common Mark Specification](http://commonmark.org/).  Since many authors only need a simple form of Markdown an alternative is to use MyWord with a lingo that emulates all the common Markdown notations. For anything more complicated the MyWord notations can be used in combination with the basic Markdown notations. Many simple Markdown documents may be used in MyWord without any changes.
 
-In Markdown each notation has a fixed semantic meaning, so that different quote marks can have very different rules. For example, the star quotes always represent emphasis, and there are special rules for different kinds of quotes. In Myword the quote notations are very simple, and they all work exactly the same way (other than the priority given to code quotes). This works well for many documents but the Myword bracket notations may be needed for more complex expressions. For example when nested quotes overlap. The Myword brackets can cope with these situations in much the same way that brackets are used in arithmetic. Markdown has no equivalent to the Myword bracket notation.
+In Markdown each notation has a fixed semantic meaning, so that different quote marks can have very different rules. For example, the star quotes always represent emphasis, and there are special rules for different kinds of quotes. In MyWord the quote notations are very simple, and they all work exactly the same way (other than the priority given to code quotes). This works well for many documents but the MyWord bracket notations may be needed for more complex expressions. For example when nested quotes overlap. The MyWord brackets can cope with these situations in much the same way that brackets are used in arithmetic. Markdown has no equivalent to the MyWord bracket notation.
 
-In Myword all the block labels, such as a `[##] header label, or a `[>] blockquote label, must be offset with a tab or two or more spaces (Markdown allows a single space). This offset format ensures that a label can always be distinguished from the same text being used as the first word in a line of normal prose. In Myword the user can choose to define any word as a block label. Also, if the content of a block label extends over multiple lines then in Myword these lines must be indented under the label to show that structure.
+In MyWord all the block labels, such as a `[##] header label, or a `[>] blockquote label, must be offset with a tab or two or more spaces (Markdown allows a single space). This offset format ensures that a label can always be distinguished from the same text being used as the first word in a line of normal prose. In MyWord the user can choose to define any word as a block label. Also, if the content of a block label extends over multiple lines then in MyWord these lines must be indented under the label to show that structure.
 
-In Myword any number of labels can be defined, so it is usually best for each label to have a single meaning. In Markdown the notations are restricted to a small set of symbols, and the same symbol can have more than one meaning. For example, the * is used as a bullet point to label a list element, but it is also used as a quote mark for `[*emphasis*]. These notations may be emulated in Myword like this:
+In MyWord any number of labels can be defined, so it is usually best for each label to have a single meaning. In Markdown the notations are restricted to a small set of symbols, and the same symbol can have more than one meaning. For example, the * is used as a bullet point to label a list element, but it is also used as a quote mark for `[*emphasis*]. These notations may be emulated in MyWord like this:
 
 .demo
     *  A bullet point with some *emphasis*.
@@ -220,7 +225,7 @@ In Myword any number of labels can be defined, so it is usually best for each la
         *[]  = <i>
         *()* = <em>
 
-In Myword there are no predefined built-in definitions, so to use Markdown notations requires a Myword lingo to define the Markdown notations.
+In MyWord there are no predefined built-in definitions, so to use Markdown notations requires a MyWord lingo to define the Markdown notations.
 
 
 
