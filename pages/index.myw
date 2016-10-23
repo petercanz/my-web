@@ -48,13 +48,16 @@ But if required you can always redefine the apostrophe symbol to be a plain type
 A symbol may be written inside parentheses, just as they are defined. This allows symbols to be named with any text:
 
 .demo
-    (c) (tm) (+1) (smiley)
+    (c) (tm) (->) (+1) (smiley)
 
     &
         (c) = &copy;
         (tm) = &trade;
+        (->) = &rarr;
         (+1) = &#x1F44D;
         (smiley) = &#x263A;
+
+The `->` is the only symbol in this example that could be used without brackets.
 
 Symbols can be defined in the same way as any other label, with a transform and a HTML wrapper:
 
@@ -207,9 +210,9 @@ A comma immediately before an opening bracket becomes an empty label. This allow
 
 ##  Markdown Compatibility
 
-MyWord is designed to allow any markup parser to translate the content text of a block label. This includes blocks of prose, which means that a standard Markdown parser can be used. The problem is that there is no way to extend the Markdown language. There are no custom notations, the only way to extend inside Markdown is to use standard HTML.
+MyWord is designed to allow any syntax to be used in the content of a block label, or the content of a bracket label. This means that a standard Markdown parser can be used to translate prose paragraphs. But there is no way to extend the Markdown language, all the notations are pre-defined. The only way for an author to extend Markdown is to use standard HTML.
 
-Many users only need a simple basic version of Markdown, something which is very easy to read and understand, which was the intent for Markdown in the first place. Beyond the basics Markdown gets very complicated, see the [Common Mark Specification](http://commonmark.org/).  Since many authors only need a simple form of Markdown an alternative is to use MyWord with a lingo that emulates all the common Markdown notations. For anything more complicated the MyWord notations can be used in combination with the basic Markdown notations. Many simple Markdown documents may be used in MyWord without any changes.
+Many users only need a simple basic version of Markdown, something which is very easy to read and understand, which was the intent for Markdown in the first place. Beyond the basics Markdown the details get very complicated, see the [Common Mark Specification](http://commonmark.org/).  Since many authors only need a simple form of Markdown an alternative is to use MyWord with a lingo that emulates the Markdown notations. For anything more complicated the MyWord notations can be used in combination with the basic Markdown notations. Many simple Markdown documents may be used in MyWord without any changes.
 
 In Markdown each notation has a fixed semantic meaning, so that different quote marks can have very different rules. For example, the star quotes always represent emphasis, and there are special rules for different kinds of quotes. In MyWord the quote notations are very simple, and they all work exactly the same way (other than the priority given to code quotes). This works well for many documents but the MyWord bracket notations may be needed for more complex expressions. For example when nested quotes overlap. The MyWord brackets can cope with these situations in much the same way that brackets are used in arithmetic. Markdown has no equivalent to the MyWord bracket notation.
 
@@ -227,17 +230,51 @@ In MyWord any number of labels can be defined, so it is usually best for each la
         *[]  = <i>
         *()* = <em>
 
+A label definition without any brackets defines a block label. A label can be defined with either parentheses or square brackets, the defintion applies to both so that the author is free to choose either type of brackets. The empty brackets in the quote pattern can be either type. If symbol definitions are used with brackets then these must match their definition.
+
 In MyWord there are no predefined built-in definitions, so to use Markdown notations requires a MyWord lingo to define the Markdown notations.
 
 
+##  Label Syntax
 
+This is just a sandbox to play around with experimental label syntax.
 
+If the only restrictions are not brackets, and no commas, then this should work:
 
+.demo
+    Some i[italic] and b[bold] words.
 
+    &
+        i[] = <i>
+        b[] = <b>
 
+How about functions in prose:
 
+.demo
+    The .js[f(x)] function ...
 
+    A ~ f(x)~ function ...
 
+    &
+        .js[] = <i>
+        ~()~  = <i>
+
+The space is used to prevent the ~f from being seen as an undefined label, but extra space is no problem in HTML. But I also had to relax the quote start rule, it was very restrictive, and required an alphanumeric after the start quote mark. Perhaps this is ok given there are only five quote marks?
+
+But maybe a better idea is to restrict the label syntax and not allow a quote symbol? It turns out that this can be implemented very simply by failing to match a label that starts with a quote mark. So there is no need to restrict the label syntax at all! If a label is not defined, then before flagging the undefined label check if it starts with a quote mark and if so then fail the elem and try for a quoteStart:
+
+.demo
+    The .js[f(x)] function ...
+
+    A ~f(x)~ function, or "f(x)" or **f(x)** ...
+
+    &
+        .js[] = <i>
+        ~()~  = <i>
+        "()"  = <q>
+        **()**  = <b>
+
+So now a label bracket element can be quoted, simply with the convention that labels should not begin with a quote mark.
 
 
 
