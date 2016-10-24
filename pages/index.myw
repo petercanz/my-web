@@ -119,7 +119,7 @@ Different quotes can be defined using any of the quote mark characters, and with
 
 Quote notations are nice and easy to read, but in MyWord they are quite restricted. Quotes can never contain their own end quote mark. The first quote mark that matches the start quote mark will immediately end the quotes. This is not always what you want. Also, quotes (other than code quotes) can only start at a word boundary, that is, they can not start inside a word. Nested quotes with multiple quote marks can not be merged together. Markdown covers lots of these special cases, but it is quite hard to understand. The MyWord quotes are restrictive, but they are simple and easy to understand.
 
-The MyWord bracket notations have no such restrictions:
+The MyWord bracket notation eliminates the restrictions inherent in the quote notation:
 
 .demo
     *[including * characters], but *not without * brackets*.
@@ -127,13 +127,13 @@ The MyWord bracket notations have no such restrictions:
     A long*[and**[bold]] word, but not long*and**bold***.
 
     &
+        *()*   = <i>
         *[]    = <i>
+
+        **()** = <b>
         **[]   = <b>
 
-        *()*   = <i>
-        **()** = <b>
-
-Quote notations are simple and easy to read, but they can not handle complicated expressions. Just as in arithmetic, when things get more complicated then you need to use brackets.
+It is a good practice to define quotes with a corresponding bracket notation. The quote notations are simple and easy to read, but they can not handle complicated expressions. Just as in arithmetic, when things get more complicated then brackets are needed.
 
 
 ##  Double Bracket Notations
@@ -207,18 +207,37 @@ A comma immediately before an opening bracket becomes an empty label. This allow
         (--)   = &mdash;
         (->)   = &rarr;
 
+The MyWord translator will try to match the longest label match first, then a shorter stem. This means that an explicit comma is not always required, but it may help to clarify the start of the label when there is no white-space:
+
+.demo
+    A long*[and**[bold]] word.
+
+    A long,*[and,**[bold]] word.
+
+    (O/)(O+)(tm)
+
+    (O/),(O+),(tm)
+
+    &
+        *[]  = <i>
+        **[] = <b>
+
+        (O/) = &empty;
+        (O+) = &oplus;
+        (tm) = &trade;
+
 
 ##  Markdown Compatibility
 
 MyWord is designed to allow any syntax to be used in the content of a block label, or the content of a bracket label. This means that a standard Markdown parser can be used to translate prose paragraphs. But there is no way to extend the Markdown language, all the notations are pre-defined. The only way for an author to extend Markdown is to use standard HTML.
 
-Many users only need a simple basic version of Markdown, something which is very easy to read and understand, which was the intent for Markdown in the first place. Beyond the basics Markdown the details get very complicated, see the [Common Mark Specification](http://commonmark.org/).  Since many authors only need a simple form of Markdown an alternative is to use MyWord with a lingo that emulates the Markdown notations. For anything more complicated the MyWord notations can be used in combination with the basic Markdown notations. Many simple Markdown documents may be used in MyWord without any changes.
+Markdown is very easy to read and understand, but beyond simple basic expressions the details get very complicated, see the [Common Mark Specification](http://commonmark.org/). A MyWord lingo can emulates a simple version of all the common Markdown notations. Many simple Markdown documents can be used as MyWord documents without any changes.
 
-In Markdown each notation has a fixed semantic meaning, so that different quote marks can have very different rules. For example, the star quotes always represent emphasis, and there are special rules for different kinds of quotes. In MyWord the quote notations are very simple, and they all work exactly the same way (other than the priority given to code quotes). This works well for many documents but the MyWord bracket notations may be needed for more complex expressions. For example when nested quotes overlap. The MyWord brackets can cope with these situations in much the same way that brackets are used in arithmetic. Markdown has no equivalent to the MyWord bracket notation.
+In Markdown each notation has a fixed semantic meaning, so that different quote marks can have very different rules. For example, the star quotes marks always represent emphasis, and there are special rules for each different kind of quote mark. In MyWord all the quote notations work in exactly the same way. This works well for simple basic expressions, but the MyWord bracket notations is needed for more complex expressions. For example when nested quotes overlap. The MyWord brackets can cope with these situations in much the same way that brackets are used in arithmetic. Markdown has no equivalent to the MyWord bracket notation.
 
 In MyWord all the block labels, such as a `[##] header label, or a `[>] blockquote label, must be offset with a tab or two or more spaces (Markdown allows a single space). This offset format ensures that a label can always be distinguished from the same text being used as the first word in a line of normal prose. In MyWord the user can choose to define any word as a block label. Also, if the content of a block label extends over multiple lines then in MyWord these lines must be indented under the label to show that structure.
 
-In MyWord any number of labels can be defined, so it is usually best for each label to have a single meaning. In Markdown the notations are restricted to a small set of symbols, and the same symbol can have more than one meaning. For example, the * is used as a bullet point to label a list element, but it is also used as a quote mark for `[*emphasis*]. These notations may be emulated in MyWord like this:
+In MyWord any number of labels can be defined, so it is usually best for each label to have a single meaning. In Markdown the notations are restricted to a small set of symbols, and the same symbol can have more than one meaning. For example, the `*` is used as a bullet point to label a list element, but it is also used as a quote mark for `*emphasis*`. These notations may be emulated in MyWord like this:
 
 .demo
     *  A bullet point with some *emphasis*.
@@ -253,19 +272,6 @@ How about functions in prose:
 .demo
     The .js[f(x)] function ...
 
-    A ~ f(x)~ function ...
-
-    &
-        .js[] = text <i>
-        ~()~  = text <i>
-
-The space is used to prevent the ~f from being seen as an undefined label, but extra space is no problem in HTML. But I also had to relax the quote start rule, it was very restrictive, and required an alphanumeric after the start quote mark. Perhaps this is ok given there are only five quote marks?
-
-But maybe a better idea is to restrict the label syntax and not allow a quote symbol? It turns out that this can be implemented very simply by failing to match a label that starts with a quote mark. So there is no need to restrict the label syntax at all! If a label is not defined, then before flagging the undefined label check if it starts with a quote mark and if so then fail the elem and try for a quoteStart:
-
-.demo
-    The .js[f(x)] function ...
-
     A ~f(x)~ function, or "f(x)" or **f(x)** ...
 
     &
@@ -274,9 +280,9 @@ But maybe a better idea is to restrict the label syntax and not allow a quote sy
         "()"  = text <q>
         **()**  = text <b>
 
-So now a label bracket element can be quoted, simply with the convention that labels should not begin with a quote mark.
+See how a label bracket element can be quoted, simply with the convention that labels should not begin with a quote mark.
 
-But no problem if a quote mark label is defined however, that should work too:
+But no problem if a quote mark label is defined, that should work too:
 
 .demo
     A _foo(bar) element and _some thing_ should both work...
