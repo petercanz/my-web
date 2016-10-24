@@ -256,8 +256,8 @@ How about functions in prose:
     A ~ f(x)~ function ...
 
     &
-        .js[] = <i>
-        ~()~  = <i>
+        .js[] = text <i>
+        ~()~  = text <i>
 
 The space is used to prevent the ~f from being seen as an undefined label, but extra space is no problem in HTML. But I also had to relax the quote start rule, it was very restrictive, and required an alphanumeric after the start quote mark. Perhaps this is ok given there are only five quote marks?
 
@@ -269,12 +269,22 @@ But maybe a better idea is to restrict the label syntax and not allow a quote sy
     A ~f(x)~ function, or "f(x)" or **f(x)** ...
 
     &
-        .js[] = <i>
-        ~()~  = <i>
-        "()"  = <q>
-        **()**  = <b>
+        .js[] = text <i>
+        ~()~  = text <i>
+        "()"  = text <q>
+        **()**  = text <b>
 
 So now a label bracket element can be quoted, simply with the convention that labels should not begin with a quote mark.
+
+But no problem if a quote mark label is defined however, that should work too:
+
+.demo
+    A _foo(bar) element and _some thing_ should both work...
+
+    &
+        _()_    = <i>
+        _foo()  = <i>
+
 
 
 
