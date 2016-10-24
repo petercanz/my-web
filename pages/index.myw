@@ -61,7 +61,7 @@ A symbol may be written inside parentheses, just as it is defined. This allows s
         (++) = &#x1F44D;
         (:smiley:) = &#x263A;
 
-To be used without parentheses a symbol word must not start with a letter or number.
+To be used without parentheses a symbol word can not start with a letter or number. To allow for punctuation a symbol word can not contain a comma, and it can not end with a full stop.
 
 Symbols may be defined with an optional transform and HTML wrapper, the same as a label:
 
