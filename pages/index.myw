@@ -185,11 +185,9 @@ The Markdown link reference definitions can also be emulated by using a block la
 The reference definition `[[eg]:] is a special block label that is used to define the contents of the second brackets.
 
 
-##  Comma Labels
+##  Comma Separator
 
-A block label may contain any characters except for white-space. An inline label has a few more restrictions, it may not contain bracket characters, and a comma has a special meaning. A comma can be used to split a label into two parts. The text before the comma is simply part of the preceding text, the text after the comma becomes the label.
-
-A comma should only be needed in rare situations, so the examples are rather contrived, but they illustrates what happens:
+If a label is not preceded by white-space then a comma may be used as a separator. This is a rare situation so the example is rather contrived, but it illustrates what happens:
 
 .demo
     **,*[this thing]
@@ -199,16 +197,6 @@ A comma should only be needed in rare situations, so the examples are rather con
         **[]   = <b>
         ***[]  = <mark>
 
-A comma immediately before an opening bracket becomes an empty label. This allows a symbol in brackets to be used without the need for white-space:
-
-.demo
-    --,(->)
-
-    &
-        --()   = <mark>
-        (--)   = &mdash;
-        (->)   = &rarr;
-
 If a bracket label is not separated from preceding text by white-space then a comma should be used to clarify the start of the label. However even without a comma the longest defined label will usually be found:
 
 .demo
@@ -216,17 +204,26 @@ If a bracket label is not separated from preceding text by white-space then a co
 
     A long*[and**[bold]] word.
 
-    (O/),(O+),(tm)
-
-    (O/)(O+)(tm)
-
     &
         *[]  = <i>
         **[] = <b>
 
+A comma may also be used to separate symbols without the need for white-space:
+
+.demo
+    --,(->) or simply --,->
+
+    (O/),(O+),(tm) or (O/)(O+)(tm)
+
+    &
+        --()   = <mark>
+        (--)   = &mdash;
+        (->)   = &rarr;
+
         (O/) = &empty;
         (O+) = &oplus;
         (tm) = &trade;
+
 
 
 ##  Markdown Compatibility
