@@ -40,7 +40,7 @@ It is quite rare to need a plain typewriter apostrophe, except in code or keyboa
 
     &
         (')  = &rsquo;
-        `[]  = text <kbd>
+        `[]  = <kbd> text
 
 But if required you can always redefine the apostrophe symbol to be a plain typewriter apostrophe:
 
@@ -69,9 +69,9 @@ Symbols may be defined with an optional transform and HTML wrapper, the same as 
     All heart :heart: on (date).
 
     &
-        (:heart:) = &hearts; <span style='color:red'>
+        (:heart:) = <span style='color:red'> &hearts;
 
-        (date) = dateNow <b>
+        (date) = <b> dateNow
         dateNow :: () => new Date().toDateString()
 
 
@@ -103,7 +103,7 @@ The are five quote mark characters `[` " * _ ~]  that may be used to define quot
     ~~strike this out~~
 
     &
-        `()` = text <code>
+        `()` = <code> text
         *()* = <em>
         __()__ = <strong>
         ~~()~~ = <s>
@@ -253,21 +253,31 @@ A label definition without any brackets defines a block label. A label can be de
 In MyWord there are no predefined built-in definitions, so the MyWord lingo needs to defines the Markdown notations.
 
 
+&   // Quotes and apostrohe...
 
+    "()" = <q>
+    (')  = &rsquo;
+    '[]  = squo
+    squo :: (content) => '&lsquo;'+markit('myword',content)+'&rsquo;'
 
-&  " = dquo
-   dquo :: (c) => '&ldquo;'+markit('myword',c)+'&rdquo;'
+&   // Emulate Markdown...
 
-&  ' = squo
-   squo :: (c) => '&lsquo;'+markit('myword',c)+'&rsquo;'
+    `()` = <code> text
+    ``()`` = <code> text
+    ```()``` = <code> text
+    ````()```` = <code> text
 
-&  []() = link2url
-    link2url :: (args) => {
-        return "<a href='"+args.split('\t')[1]+"'>"+args.split('\t')[0]+"</a>"; }
+    *()*    = <i>
+    **()**  = <b>
 
-&  [][] = link2ref
-    link2ref :: (args) => {
-        var ref = args.split('\t')[1]
-        var url = markit.metadata('['+ref+']:');
-        if (!url) return "["+args.split('\t')[0]+"][<mark>"+ref+"</mark>]";
-        return "<a href='"+url+"'>"+args.split('\t')[0]+"</a>"; }
+    _()_    = <i>
+    __()__  = <b>
+
+    ~()~    = <u>
+    ~~()~~  = <s>
+
+    []()    = linkURL
+    linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
+
+    [][]    = linkURL
+    linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
