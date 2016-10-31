@@ -2,87 +2,50 @@
 
 The core MyWord notation for inline elements is the label and bracket notation. This can be used to represent any HTML element, and the content of the brackets can use any other syntax that is defined in a lingo. The core notation is easy to read, and it is very flexible and extendable.  However, there are some other lightweight markup notations, such as the Markdown notations, that have become very popular, and they are even easier to read.
 
-For this reason MyWord enables a variety of extra notations that can be defined in much the same way that labels are defined for the core notation. These notations can be used in many different ways, and they can emulate most of the familiar Markdown notations. The extra notations include symbols, quotes, and double bracket notations.
+For this reason MyWord enables a variety of extra notations that can be defined in much the same way that labels are defined for the core notation. These notations can be used in many different ways, and they can emulate most of the familiar Markdown notations. The extra notations include symbolic labels, quotes, and double bracket notations.
 
-##  Symbols
+##  Symbolic Labels
 
-HTML allows any Unicode symbol to be expressed as an entity. For example: `&`rarr; for a &rarr; symbol.
+A label is usually defined to apply to content text in brackets, but a symbolic label may be defined as a literal value without any content text. When there is no content text the brackets may be omitted, so the symbolic label by itself is the notation.
 
-Some symbols can be directly represented with common characters, for example `[->] to represent the &rarr; arrow.
-
-In MyWord a symbol can be defined as characters inside parentheses:
+Some examples of symbolic labels:
 
 .demo
-    x -> y -- -> z
+    :smiley: ^1 #empty x->y @me.
+
+    &
+        :smiley:() = &#x1f600;
+        ^1()       = &#x1F44D;
+        #empty()   = &empty;
+        ->()       = &rarr;
+        @me()      = I'm *[Fred Smith]
+        '()        = &rsquo;
+        *()        = <i>
+
+Symbol labels may also be defined with an optional HTML wrapper and transform:
+
+.demo
+    ---
+    All heart.heart on .date.
     ---
 
     &
-        (->) = &rarr;
-        (--) = &mdash;
-        (---) = <hr>
+        ---() = <hr/>
 
-The symbol notations are simply nicer to read than the standard HTML entity notation.
+        .heart() = <span style='color:red'> &hearts;
 
-As another example, the typewriter apostrophe may be used to directly represent a typographical apostrophe. The same character is used in single quote marks, but single quotes can be defined with a bracket label, which allows apostrophe characters to be used inside single quotes:
-
-.demo
-    That's '[Joes's thing].
-
-    &
-        (')  = &rsquo;
-        '[]  = squo
-        squo :: (content) => '&lsquo;'+markit('myword',content)+'&rsquo;'
-
-It is quite rare to need a plain typewriter apostrophe, except in code or keyboard text, which is no problem:
-
-.demo
-    It's `[p's and q's]
-
-    &
-        (')  = &rsquo;
-        `[]  = <kbd> text
-
-But if required you can always redefine the apostrophe symbol to be a plain typewriter apostrophe:
-
-.demo
-    It's p's and q's
-
-    &  (') = &apos;
-
-A symbol may be written inside parentheses, just as it is defined. This allows symbols to be any word:
-
-.demo
-    (c) (tm) -> :smiley: ++
-
-    &
-        (c) = &copy;
-        (tm) = &trade;
-        (->) = &rarr;
-        (++) = &#x1F44D;
-        (:smiley:) = &#x263A;
-
-To be used without parentheses a symbol word can not start with a letter or number. To allow for punctuation a symbol word can not contain a comma, and it can not end with a full stop.
-
-Symbols may be defined with an optional transform and HTML wrapper, the same as a label:
-
-.demo
-    All heart :heart: on (date).
-
-    &
-        (:heart:) = <span style='color:red'> &hearts;
-
-        (date) = <b> dateNow
-        dateNow :: () => new Date().toDateString()
+        .date()  = <b> dateNow
+        dateNow  :: () => new Date().toDateString()
 
 
 ##  Quotes
 
-HTML provides a <q> tag that can be used for typographical quotation marks:
+HTML provides a `<q>` tag that can be used for typographical quotation marks:
 
 .demo
     Nice :q[typographical] quote marks.
 
-    &  :q = <q>
+    &  :q() = <q>
 
 Even better, quotes can be defined directly as a notation. They are defined as a pattern using quote marks around empty brackets:
 
@@ -91,7 +54,21 @@ Even better, quotes can be defined directly as a notation. They are defined as a
 
     &  "()" = <q>
 
-The are five quote mark characters `[` " * _ ~]  that may be used to define quote notations. These quote marks allow the familiar Markdown notations to be emulated:
+An typewriter apostrophe character can serve double duty as single quote marks:
+
+.demo
+    That's 'Joes's thing'.
+
+    &
+        '()  = &rsquo;
+        '()' = squo
+        squo :: (content) => '&lsquo;'+markit('myword',content)+'&rsquo;'
+
+A quote can not start or end in the middle of a word. Inside a word the apostrophe is defined as a symbolic label.
+
+The are four other quote mark characters: `[` * _ ~]  that may be used to define quote notations.
+
+These quote marks allow the familiar Markdown notations to be emulated:
 
 .demo
     `if (a>b) {...}`
@@ -119,23 +96,19 @@ Different quotes can be defined using any of the quote mark characters, and with
         *()*   = <i>
         **()** = <b>
 
-Quote notations are nice and easy to read, but in MyWord they are quite restricted. Quotes can never contain their own end quote mark. The first quote mark that matches the start quote mark will immediately end the quotes. This is not always what you want. Also, quotes can only start at a word boundary, that is, they can not start inside a word. Nested quotes with multiple quote marks can not be merged together. Markdown covers lots of these special cases, but it is quite hard to understand. The MyWord quotes are restrictive, but they are simple and easy to understand.
-
-The MyWord bracket notation eliminates the restrictions inherent in the quote notations:
+The MyWord bracket notation can be used to avoid the restrictions inherent in the quote notations:
 
 .demo
-    *[including * characters], but *not without * brackets*.
-
-    A long*[and**[bold]] word, but not long*and**bold***.
+    A long_(and__(bold)) word, __but__ _not_ long_and__bold___.
 
     &
-        *()*   = <i>
-        *[]    = <i>
+        _()_   = <i>
+        _()    = <i>
 
-        **()** = <b>
-        **[]   = <b>
+        __()__ = <b>
+        __()   = <b>
 
-It is a good practice to define quotes with a corresponding bracket notation. The quote notations are simple and easy to read, but they can not handle complicated expressions. Just as in arithmetic, when things get more complicated then brackets are needed.
+The quote notations are simple and easy to read, but for more complicated expressions MyWord bracket notations may be needed.
 
 
 ##  Double Bracket Notations
@@ -147,7 +120,7 @@ A MyWord inline label may be defined with a second set of brackets like this:
 
     &
         @[]()   = linkURL
-        linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
+        linkURL :~ ([^\t]*)\t(.*) :: (_,txt,url) => "<a href='"+url+"'>"+txt+"</a>"
 
 An image can be defined in much the same way:
 
@@ -156,7 +129,7 @@ An image can be defined in much the same way:
 
     &
         ![]()    = imageURL
-        imageURL :: (txt,url) => "<img src='"+url+"' title='"+txt+"' />"
+        imageURL :~ ([^\t]*)\t(.*) :: (_,txt,url) => "<img src='"+url+"' title='"+txt+"' />"
 
 This emulates the Markdown image notation.
 
@@ -167,7 +140,7 @@ A `[[]()] pattern without a label can be defined to match double brackets, and t
 
     &
         []()    = linkURL
-        linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
+        linkURL :~ ([^\t]*)\t(.*) :: (_,txt,url) => "<a href='"+url+"'>"+txt+"</a>"
 
 This emulates the Markdown link notation. This double bracket pattern acts as if it has an implicit @ label.
 
@@ -180,50 +153,9 @@ The Markdown link reference definitions can also be emulated by using a block la
 
     &
         [][]    = linkURL
-        linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
+        linkURL :~ ([^\t]*)\t(.*) :: (_,txt,url) =>  "<a href='"+url+"'>"+txt+"</a>"
 
 The reference definition `[[eg]:] is a special block label that is used to define the contents of the second brackets.
-
-
-##  Comma Separator
-
-If a label is not preceded by white-space then a comma may be used as a separator. This is a rare situation so the example is rather contrived, but it illustrates what happens:
-
-.demo
-    **,*[this thing]
-
-    &
-        *[]    = <i>
-        **[]   = <b>
-        ***[]  = <mark>
-
-If a bracket label is not separated from preceding text by white-space then a comma should be used to clarify the start of the label. However even without a comma the longest defined label will usually be found:
-
-.demo
-    A long,*[and,**[bold]] word.
-
-    A long*[and**[bold]] word.
-
-    &
-        *[]  = <i>
-        **[] = <b>
-
-A comma may also be used to separate symbols without the need for white-space:
-
-.demo
-    --,(->) or simply --,->
-
-    (O/),(O+),(tm) or (O/)(O+)(tm)
-
-    &
-        --()   = <mark>
-        (--)   = &mdash;
-        (->)   = &rarr;
-
-        (O/) = &empty;
-        (O+) = &oplus;
-        (tm) = &trade;
-
 
 
 ##  Markdown Compatibility
@@ -232,35 +164,36 @@ MyWord is designed to allow any syntax to be used in the content of a block labe
 
 Markdown is very easy to read and understand, but beyond simple basic expressions the details get very complicated, see the [Common Mark Specification](http://commonmark.org/). A MyWord lingo can emulate a simple version of the common Markdown notations. Many simple Markdown documents can be used as MyWord documents without any changes.
 
-In Markdown each notation has a fixed semantic meaning, so that different quote marks can have very different rules. For example, a star quote mark represents emphasis, and a back-tick quote represents code, but they work quite differently. In MyWord all the quote notations work exactly the same way, and the user can define what they mean. This works well for simple basic expressions, but bracket notations are needed for more complex expressions. For example when nested quotes overlap. The MyWord brackets can be used in these situations in much the same way that brackets are used in arithmetic. Markdown has no equivalent to the MyWord bracket notation.
+In Markdown each notation has a fixed semantic meaning, so that different quote marks can have very different rules. For example, a back-tick quote represents code, and a star quote mark represents emphasis but they work quite differently. In MyWord all the quote notations work exactly the same way, and the user can define what they mean. This works well for simple basic expressions, but bracket notations are needed for more complex expressions. For example when nested quotes overlap. The MyWord brackets can be used in these situations in much the same way that brackets are used in arithmetic. Markdown has no equivalent to the MyWord bracket notation.
 
 In MyWord all the block labels, such as a `[##] header label, or a `[>] blockquote label, must be offset with a tab or two or more spaces (Markdown allows a single space). This offset format ensures that a label can always be distinguished from the same text being used as the first word in a line of normal prose. In MyWord the user can choose to define any word as a block label. Also, if the content of a block label extends over multiple lines then in MyWord these lines must be indented under the label to show that structure.
 
-In MyWord any number of labels can be defined, so it is usually best for each label to have a single meaning. In Markdown the notations are restricted to a small set of symbols, and the same symbol can have more than one meaning. For example, the `*` is used as a bullet point to label a list element, but it is also used as a quote mark for `*emphasis*`. These notations may be emulated in MyWord like this:
+In MyWord any number of labels can be defined, so it is usually best for each label to have a single meaning. In Markdown the notations are restricted to a small set of symbols, and the same symbol can have more than one meaning. For example, the `*` is used as a bullet point to label a list element (a block element), but it is also used as a quote mark for `*emphasis*` (an inline element). These notations may be emulated in MyWord like this:
 
 .demo
-    *  A bullet point with some *emphasis*.
+    *  A bullet point with *[italic text].
 
-    *  Another point with *[italic text].
+    *  Another point with some *emphasis*.
 
     &
         *    = list <ul>
-        *[]  = <i>
+        *()  = <i>
         *()* = <em>
 
-A label definition without any brackets defines a block label. A label can be defined with either parentheses or square brackets, the defintion applies to both so that the author is free to choose either type of brackets. The empty brackets in the quote pattern can be either type. If symbol definitions are used with brackets then these must match their definition.
-
 In MyWord there are no predefined built-in definitions, so the MyWord lingo needs to defines the Markdown notations.
+
 
 
 &   // Quotes and apostrohe...
 
     "()" = <q>
-    (')  = &rsquo;
-    '[]  = squo
+    '()  = &rsquo;
+    '()'  = squo
     squo :: (content) => '&lsquo;'+markit('myword',content)+'&rsquo;'
 
 &   // Emulate Markdown...
+
+    `()  = <code> text
 
     `()` = <code> text
     ``()`` = <code> text

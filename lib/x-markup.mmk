@@ -2,7 +2,7 @@
 // definitions...
 
 &           = metamark
-()          = <span class='inset'>
+()          = <span class='inset'> myword
 @include    = include
 @imbed      = imbedURL
 
