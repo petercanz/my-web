@@ -1,28 +1,47 @@
 ##  Extra Notations
 
-The core MyWord notation for inline elements is the label and bracket notation. This can be used to represent any HTML element, and the content of the brackets can use any other syntax that is defined in a lingo. The core notation is easy to read, and it is very flexible and extendable.  However, there are some other lightweight markup notations, such as the Markdown notations, that have become very popular, and they are even easier to read.
+The MyWord bracket notation for inline elements can be used to represent any HTML element. The bracket notation is easy to read, and it is very flexible and extendable.  However, there are simpler notations that are even easier to read, such as the notations used in Markdown.
 
-For this reason MyWord enables a variety of extra notations that can be defined in much the same way that labels are defined for the core notation. These notations can be used in many different ways, and they can emulate most of the familiar Markdown notations. The extra notations include symbolic labels, quotes, and double bracket notations.
+For this reason MyWord also supports some extra notations. These notations can be used to emulate most of the popular Markdown notations. The extra notations include symbols, quotes, and double bracket notations.
 
-##  Symbolic Labels
+##  Symbols
 
-A label is usually defined to apply to content text in brackets, but a symbolic label may be defined as a literal value without any content text. When there is no content text the brackets may be omitted, so the symbolic label by itself is the notation.
+MyWord allows users to define custom symbols to represent other text. For example, the symbol `->` can be defined to represent the -> character, and the plain text apostrophe `'` character can be defined to represent a fancy &rsquo; typographical apostrophe:
 
-Some examples of symbolic labels:
+&   (->) = &rarr;
 
 .demo
-    :smiley: ^1 #empty x->y @me.
+    x->y
+
+    Joe's thing.
 
     &
-        :smiley:() = &#x1f600;
-        ^1()       = &#x1F44D;
-        #empty()   = &empty;
-        ->()       = &rarr;
-        @me()      = I'm *[Fred Smith]
-        '()        = &rsquo;
+        (->)   = &rarr;
+        (')    = &rsquo;
+
+In the definition the symbol must appear inside brackets, but as a notation the symbol may be used without the brackets.
+
+A symbol can not start with a letter or digit character, but it may contain any characters other than white-space or brackets:
+
+.demo
+    :smiley: ^1 #empty
+
+    &
+        (:smiley:) = &#x1f600;
+        (^1)       = &#x1F44D;
+        (#empty)   = &empty;
+
+A symbol can be defined to represent any MyWord text:
+
+.demo
+    Hello, @me
+
+    &
+        (@me)      = I'm *[Fred Smith]
+        (')        = &rsquo;
         *()        = <i>
 
-Symbol labels may also be defined with an optional HTML wrapper and transform:
+Symbols may also be defined with an HTML wrapper, and with a transform:
 
 .demo
     ---
@@ -30,43 +49,65 @@ Symbol labels may also be defined with an optional HTML wrapper and transform:
     ---
 
     &
-        ---() = <hr/>
+        (---) = <hr/>
 
-        .heart() = <span style='color:red'> &hearts;
+        (.heart) = <span style='color:red'> &hearts;
 
-        .date()  = <b> dateNow
+        (.date)  = <b> dateNow
         dateNow  :: () => new Date().toDateString()
+
+Notice in this example that the symbols can be used immediately after other text, or before punctuation. But in other cases brackets may be necessary:
+
+.demo
+    (<-)->
+
+    <-->
+
+
+    &
+        (<-) = &larr;
+        (->) = &rarr;
+
+        (<-->) = harr
+        harr :: () => '&larr;'+'&rarr;'
+
 
 
 ##  Quotes
 
-HTML provides a `<q>` tag that can be used for typographical quotation marks:
+HTML provides a `<q>` tag for a quotation, which is presented with nice typographical quotation marks. Quotes can be defined as standard MyWord bracket notations:
 
 .demo
     Nice :q[typographical] quote marks.
 
-    &  :q() = <q>
+    Nice "[typographical] quote marks.
 
-Even better, quotes can be defined directly as a notation. They are defined as a pattern using quote marks around empty brackets:
+    &
+      :q() = <q>
+      "() = <q>
+
+Even better, quotes can be defined as a MyWord notation. The quote notation is defined with a pattern that shows the quote marks around empty brackets:
 
 .demo
     Nice "typographical" quote marks.
 
     &  "()" = <q>
 
-An typewriter apostrophe character can serve double duty as single quote marks:
+A quote notation must start at a word boundary, i.e. at the start of text, or after a white-space. A quote must also end at a word broundary, i.e the end quote mark must be the end of text, or be followed by white-space, or punctuation. The end quote mark can not be followed by a letter or digit.
+
+The typewriter apostrophe character `'` can serve double duty as single quote marks:
 
 .demo
     That's 'Joes's thing'.
 
     &
-        '()  = &rsquo;
+        (')  = &rsquo;
         '()' = squo
         squo :: (content) => '&lsquo;'+markit('myword',content)+'&rsquo;'
 
-A quote can not start or end in the middle of a word. Inside a word the apostrophe is defined as a symbolic label.
+Since a quote can not start or end in the middle of a word the ' inside a word is defined as an apostrophe symbol.
 
-The are four other quote mark characters: `[` * _ ~]  that may be used to define quote notations.
+There are four other quote mark characters: `[` * _ ~]  that may be used to define quote notations.
 
 These quote marks allow the familiar Markdown notations to be emulated:
 
@@ -99,52 +140,51 @@ Different quotes can be defined using any of the quote mark characters, and with
 The MyWord bracket notation can be used to avoid the restrictions inherent in the quote notations:
 
 .demo
-    A long_(and__(bold)) word, __but__ _not_ long_and__bold___.
+    A long_and__bold___word
+
+    A long_(and__(bold))word
 
     &
         _()_   = <i>
-        _()    = <i>
-
         __()__ = <b>
+
+        _()    = <i>
         __()   = <b>
 
-The quote notations are simple and easy to read, but for more complicated expressions MyWord bracket notations may be needed.
+The quote notations are simple and easy to read in most common usage, but bracket notations may be required for more complex expressions.
+
+Another option is to use a bracket notation to group the quote notations:
+
+.demo
+    A long.(_and.(__bold__)_)word
+
+    &
+        _()_   = <i>
+        __()__ = <b>
+
+        .()    = <span>
+
 
 
 ##  Double Bracket Notations
 
-A MyWord inline label may be defined with a second set of brackets like this:
+The label pattern `[[]()] can be defined to match double bracket notations, as used for links in Markdown.
 
 .demo
-    For example, @[link to something](http://example.com)
-
-    &
-        @[]()   = linkURL
-        linkURL :~ ([^\t]*)\t(.*) :: (_,txt,url) => "<a href='"+url+"'>"+txt+"</a>"
-
-An image can be defined in much the same way:
-
-.demo
-    This image: ![a gopher](images/gopher.png)
-
-    &
-        ![]()    = imageURL
-        imageURL :~ ([^\t]*)\t(.*) :: (_,txt,url) => "<img src='"+url+"' title='"+txt+"' />"
-
-This emulates the Markdown image notation.
-
-A `[[]()] pattern without a label can be defined to match double brackets, and the same linkURL transform can be used as before.
-
-.demo
-    For example, [link to something](http://example.com)
+    For example, a [link to something](http://example.com)
 
     &
         []()    = linkURL
-        linkURL :~ ([^\t]*)\t(.*) :: (_,txt,url) => "<a href='"+url+"'>"+txt+"</a>"
 
-This emulates the Markdown link notation. This double bracket pattern acts as if it has an implicit @ label.
+        linkURL :: (content) => {
+            var parts = content.match(/^\[(.+?)\]\((.+?)\)$/);
+            var txt = markit('myword', parts[1]);
+            var url = markit('text', parts[2]);
+            return "<a href='"+url+"'>"+txt+"</a>"; }
 
-The Markdown link reference definitions can also be emulated by using a block label that matches the Markdown `[[]:] format:
+This label pattern gives the transfom the full source text as the content (including the brackets).
+
+The Markdown link reference definitions can be emulated with a block label that matches the Markdown `[[]:] format:
 
 .demo
     For example, a [link to something][eg]
@@ -152,21 +192,59 @@ The Markdown link reference definitions can also be emulated by using a block la
     [eg]:  http://example.com
 
     &
-        [][]    = linkURL
-        linkURL :~ ([^\t]*)\t(.*) :: (_,txt,url) =>  "<a href='"+url+"'>"+txt+"</a>"
+        [][]    = linkREF
 
-The reference definition `[[eg]:] is a special block label that is used to define the contents of the second brackets.
+        linkREF :: (content) => {
+            var parts = content.match(/^\[(.+?)\]\[(.+?)\](.*)$/);
+            var txt = markit('myword', parts[1]);
+            var ref = markit('text', parts[2]);
+            if (!parts[3]) return '['+txt+'][<mark>'+ref+'</mark>]';
+            var url = markit('text', parts[3]);
+            return "<a href='"+url+"'>"+txt+"</a>"; }
+
+The reference definition `[[eg]:] is a special block label that is used to define the reference given in the second brackets.
+
+This label pattern appends the value of the reference to the source content. If the reference is not defined then the linkREF transform can mark that as an error.
+
+The Markdown notation for an image can be defined in much the same way:
+
+.demo
+    This image: ![go gopher](images/gopher.png)
+
+    &
+        ![]()    = imageURL
+        ![][]    = imageREF
+
+        imageURL :: (content) => {
+            var parts = content.match(/^(.*?)\[(.+?)\]\((.+?)\)$/);
+            var txt = markit('myword', parts[2]);
+            var url = markit('text', parts[3]);
+            return "<img src='"+url+"' title='"+txt+"'/>"; }
+
+        imageREF :: (content) => {
+            var parts = content.match(/^(.*?)\[(.+?)\]\((.+?)\)(.*)$/);
+            var label = parts[1];
+            var txt = markit('myword', parts[2]);
+            var ref = markit('text', parts[3]);
+            if (!parts[4]) return label+'['+txt+'][<mark>'+ref+'</mark>]';
+            var url = markit('text', parts[4]);
+            return "<img src='"+url+"' title='"+txt+"'/>"; }
+
+This emulates the Markdown image notations.
+
 
 
 ##  Markdown Compatibility
 
-MyWord is designed to allow any syntax to be used in the content of a block label, or the content of a bracket label. This means that a standard Markdown parser can be used to translate prose paragraphs. But there is no way to extend the Markdown language, all the notations are pre-defined. The only way for an author to extend Markdown is to use standard HTML.
+MyWord is designed to allow a label to be defined with any syntax it wants to use in the content text. This means that a standard Markdown parser can be used to translate prose paragraphs in a MyWord document. This provides full Markdown compatibility, but there is no way to extend beyond the Markdown language since all the notations are pre-defined. The only way for an author to extend Markdown is to use standard HTML.
 
-Markdown is very easy to read and understand, but beyond simple basic expressions the details get very complicated, see the [Common Mark Specification](http://commonmark.org/). A MyWord lingo can emulate a simple version of the common Markdown notations. Many simple Markdown documents can be used as MyWord documents without any changes.
+Instead, MyWord can be used to emulate Markdown notations. This enables most Markdown documents to be used in MyWord without any changes, but the MyWord notations are also available to extend beyond Markdown.
 
-In Markdown each notation has a fixed semantic meaning, so that different quote marks can have very different rules. For example, a back-tick quote represents code, and a star quote mark represents emphasis but they work quite differently. In MyWord all the quote notations work exactly the same way, and the user can define what they mean. This works well for simple basic expressions, but bracket notations are needed for more complex expressions. For example when nested quotes overlap. The MyWord brackets can be used in these situations in much the same way that brackets are used in arithmetic. Markdown has no equivalent to the MyWord bracket notation.
+Markdown is very easy to read and understand, but beyond simple basic expressions the details get very complicated, see the [Common Mark Specification](http://commonmark.org/). A MyWord lingo can emulate Markdown to cover most common usage, and MyWord notations can cover any complex special cases or extensions that may be required.
 
 In MyWord all the block labels, such as a `[##] header label, or a `[>] blockquote label, must be offset with a tab or two or more spaces (Markdown allows a single space). This offset format ensures that a label can always be distinguished from the same text being used as the first word in a line of normal prose. In MyWord the user can choose to define any word as a block label. Also, if the content of a block label extends over multiple lines then in MyWord these lines must be indented under the label to show that structure.
+
+In Markdown each notation has a fixed semantic meaning, so the different Markdown quote mark notations can have very different rules. For example, a back-tick quote represents code, and a star quote mark represents emphasis but they work quite differently. In MyWord all the quote notations work exactly the same way, and the user can define what they mean. This works well for simple basic expressions, but bracket notations are needed for more complex expressions. For example when nested quotes overlap and are conflated. The MyWord brackets can be used in these situations in much the same way that brackets are used in arithmetic. Markdown has no equivalent to the MyWord bracket notation.
 
 In MyWord any number of labels can be defined, so it is usually best for each label to have a single meaning. In Markdown the notations are restricted to a small set of symbols, and the same symbol can have more than one meaning. For example, the `*` is used as a bullet point to label a list element (a block element), but it is also used as a quote mark for `*emphasis*` (an inline element). These notations may be emulated in MyWord like this:
 
@@ -184,14 +262,14 @@ In MyWord there are no predefined built-in definitions, so the MyWord lingo need
 
 
 
-&   // Quotes and apostrohe...
+&   // Apostrophe and Quotes...
 
+    (')  = &rsquo;
     "()" = <q>
-    '()  = &rsquo;
-    '()'  = squo
+    '()' = squo
     squo :: (content) => '&lsquo;'+markit('myword',content)+'&rsquo;'
 
-&   // Emulate Markdown...
+&   // Emulate Markdown elements .......
 
     `()  = <code> text
 
@@ -200,8 +278,8 @@ In MyWord there are no predefined built-in definitions, so the MyWord lingo need
     ```()``` = <code> text
     ````()```` = <code> text
 
-    *()*    = <i>
-    **()**  = <b>
+    *()*    = <em>
+    **()**  = <strong>
 
     _()_    = <i>
     __()__  = <b>
@@ -209,8 +287,42 @@ In MyWord there are no predefined built-in definitions, so the MyWord lingo need
     ~()~    = <u>
     ~~()~~  = <s>
 
-    []()    = linkURL
-    linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
+    // links ..................
 
-    [][]    = linkURL
-    linkURL :: (txt,url) => "<a href='"+url+"'>"+txt+"</a>"
+    []()    = linkURL
+
+    linkURL :: (content) => {
+        var parts = content.match(/^\[(.+?)\]\((.+?)\)$/);
+        var txt = markit('myword', parts[1]);
+        var url = markit('text', parts[2]);
+        return "<a href='"+url+"'>"+txt+"</a>"; }
+
+    [][]    = linkREF
+
+    linkREF :: (content) => {
+        var parts = content.match(/^\[(.+?)\]\[(.+?)\](.*)$/);
+        var txt = markit('myword', parts[1]);
+        var ref = markit('text', parts[2]);
+        if (!parts[3]) return '['+txt+'][<mark>'+ref+'</mark>]';
+        var url = markit('text', parts[3]);
+        return "<a href='"+url+"'>"+txt+"</a>"; }
+
+    // images ..............
+
+    ![]()    = imageURL
+    ![][]    = imageREF
+
+    imageURL :: (content) => {
+        var parts = content.match(/^(.*?)\[(.+?)\]\((.+?)\)$/);
+        var txt = markit('myword', parts[2]);
+        var url = markit('text', parts[3]);
+        return "<img src='"+url+"' title='"+txt+"'/>"; }
+
+    imageREF :: (content) => {
+        var parts = content.match(/^(.*?)\[(.+?)\]\((.+?)\)(.*)$/);
+        var label = parts[1];
+        var txt = markit('myword', parts[2]);
+        var ref = markit('text', parts[3]);
+        if (!parts[4]) return label+'['+txt+'][<mark>'+ref+'</mark>]';
+        var url = markit('text', parts[4]);
+        return "<img src='"+url+"' title='"+txt+"'/>"; }
